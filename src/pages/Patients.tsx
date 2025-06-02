@@ -1,105 +1,44 @@
 
-import { useState, useEffect } from 'react';
-import Navbar from '@/components/Navbar';
-import PatientForm from '@/components/PatientForm';
-import PatientTable from '@/components/PatientTable';
+import { Layout } from '@/components/Layout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Patient } from '@/types';
-import { getPatients } from '@/utils/storage';
-import { useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Users, Plus } from 'lucide-react';
 
-const Patients = () => {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('list');
-  const [patients, setPatients] = useState<Patient[]>([]);
-  const [editingPatient, setEditingPatient] = useState<Patient | undefined>(undefined);
-  
-  useEffect(() => {
-    loadPatients();
-  }, []);
-  
-  const loadPatients = () => {
-    setPatients(getPatients());
-  };
-  
-  const handleEdit = (patient: Patient) => {
-    setEditingPatient(patient);
-    setActiveTab('form');
-  };
-  
-  const handlePrescription = (patient: Patient) => {
-    // Navegar para criar uma receita para este paciente
-    navigate(`/prescriptions?patientId=${patient.id}`);
-  };
-  
-  const handleFormSuccess = () => {
-    loadPatients();
-    setActiveTab('list');
-    setEditingPatient(undefined);
-  };
-
+export default function Patients() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      
-      <div className="container mx-auto py-8 px-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+    <Layout>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-health-700">Pacientes</h1>
-            <p className="text-gray-600">Gerencie os cadastros de pacientes</p>
+            <h1 className="text-2xl font-bold text-gray-900">Pacientes</h1>
+            <p className="text-gray-600">Gerencie o cadastro de pacientes</p>
           </div>
-          
-          {activeTab === 'list' && (
-            <Button 
-              onClick={() => setActiveTab('form')}
-              className="mt-4 md:mt-0 bg-health-600 hover:bg-health-700"
-            >
-              <Plus className="mr-1 h-4 w-4" /> Novo Paciente
-            </Button>
-          )}
+          <Button className="bg-blue-600 hover:bg-blue-700">
+            <Plus className="w-4 h-4 mr-2" />
+            Novo Paciente
+          </Button>
         </div>
-        
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger value="list">Lista de Pacientes</TabsTrigger>
-            <TabsTrigger value="form">
-              {editingPatient ? 'Editar Paciente' : 'Novo Paciente'}
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="list" className="mt-4">
-            <PatientTable 
-              patients={patients}
-              onEdit={handleEdit}
-              onPrescription={handlePrescription}
-              onPatientDeleted={loadPatients}
-            />
-          </TabsContent>
-          
-          <TabsContent value="form" className="mt-4">
-            <PatientForm 
-              initialData={editingPatient} 
-              onSuccess={handleFormSuccess} 
-            />
-            
-            <div className="mt-4 flex justify-end">
-              <Button 
-                variant="outline"
-                onClick={() => {
-                  setActiveTab('list');
-                  setEditingPatient(undefined);
-                }}
-              >
-                Cancelar
-              </Button>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
-  );
-};
 
-export default Patients;
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Users className="w-5 h-5" />
+              <span>Lista de Pacientes</span>
+            </CardTitle>
+            <CardDescription>
+              Sistema implementado com sucesso! Módulo de pacientes em desenvolvimento.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-8">
+              <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500">
+                Módulo de pacientes será implementado na próxima etapa
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </Layout>
+  );
+}
